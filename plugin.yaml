@@ -1,0 +1,11 @@
+plugin:
+    name: 'ahmadfatoni.apigenerator::lang.plugin.name'
+    description: 'ahmadfatoni.apigenerator::lang.plugin.description'
+    author: AhmadFatoni
+    icon: oc-icon-bolt
+    homepage: ''
+navigation:
+    api-generator:
+        label: 'API Generator'
+        url: ahmadfatoni/apigenerator/apigeneratorcontroller
+        icon: icon-cogs

@@ -1,0 +1,4 @@
+/controllers/*
+!/controllers/apilistcontroller/*
+!/controllers/apilistcontroller
+!/controllers/ApiListController.php

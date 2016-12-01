@@ -1,0 +1,5 @@
+1.0.1:
+    - 'Initialize plugin.'
+1.0.2:
+    - 'Created table ahmadfatoni_apigenerator_data'
+    - builder_table_create_ahmadfatoni_apigenerator_data.php

@@ -1,0 +1,9 @@
+columns:
+    name:
+        label: 'API NAME'
+        type: text
+        searchable: true
+        sortable: true
+    endpoint:
+        label: 'BASE ENDPOINT'
+        type: text

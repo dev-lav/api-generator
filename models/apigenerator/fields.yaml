@@ -1,0 +1,33 @@
+fields:
+    name:
+        label: 'API Name'
+        oc.commentPosition: ''
+        span: auto
+        placeholder: 'Name of your API'
+        required: 1
+        type: text
+    endpoint:
+        label: 'Base Endpoint'
+        oc.commentPosition: ''
+        span: auto
+        placeholder: api/v1/modulename
+        required: 1
+        type: text
+    description:
+        label: 'Short Description'
+        oc.commentPosition: ''
+        span: auto
+        placeholder: 'Descript your API'
+        type: text
+    model:
+        label: 'Select Model'
+        oc.commentPosition: ''
+        span: auto
+        required: 1
+        type: dropdown
+    custom_format:
+        label: 'Custom Condition (Fillable and Relation)'
+        size: large
+        oc.commentPosition: ''
+        span: full
+        type: textarea
