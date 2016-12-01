@@ -1,0 +1,133 @@
+<?php Block::put('breadcrumb') ?>
+    <ul>
+        <li><a href="<?= Backend::url('ahmadfatoni/apigenerator/apigeneratorcontroller') ?>">ApiListController</a></li>
+        <li><?= e($this->pageTitle) ?></li>
+    </ul>
+<?php Block::endPut() ?>
+
+<?php if (!$this->fatalError): ?>
+
+    <?= Form::open(['class' => 'layout']) ?>
+
+        <div class="layout-row">
+            <?= $this->formRender() ?>
+        </div>
+            
+    <div class="modal fade" id="modal-id">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Custom Condition</h4>
+                </div>
+                <div class="modal-body">
+                    <?php
+                        $data = '{
+    "fillable": "id,title,content",
+    "relation": [{
+        "name": "user",
+        "fillable": "id,first_name"
+    }, {
+        "name": "categories",
+        "fillable": "id,name"
+    }]
+}';
+                        echo $data ;
+
+                    ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="form-buttons">
+            <div class="loading-indicator-container">
+                <button
+                    type="submit"
+                    data-request="onSave"
+                    data-request-success="saveData()"
+                    data-request-data="redirect:0"
+                    data-hotkey="ctrl+s, cmd+s"
+                    data-load-indicator="<?= e(trans('backend::lang.form.saving')) ?>"
+                    class="btn btn-primary">
+                    <?= e(trans('backend::lang.form.save')) ?>
+                </button>
+                
+                <a href="<?= Backend::url('ahmadfatoni/apigenerator/apigeneratorcontroller') ?>" class="btn btn-warning"><div id="cancel">Cancel</div></a>
+
+                <button
+                    type="button"
+                    class="oc-icon-trash-o btn-icon danger pull-right"
+                    data-request="onDelete"
+                    data-request-success="delData()"
+                    data-load-indicator="<?= e(trans('backend::lang.form.deleting')) ?>"
+                    data-request-confirm="<?= e(trans('backend::lang.form.confirm_delete')) ?>">
+                </button>
+
+                <a data-toggle="modal" href='#modal-id'>
+                    <button type="button" class="btn btn-default">
+                        Example Custom Condition
+                    </button>
+                </a>
+                
+            </div>
+        </div>
+    <?= Form::close() ?>
+
+<?php else: ?>
+    <p class="flash-message static error"><?= e(trans($this->fatalError)) ?></p>
+    <p><a href="<?= Backend::url('ahmadfatoni/apigenerator/apigeneratorcontroller') ?>" class="btn btn-default"><?= e(trans('backend::lang.form.return_to_list')) ?></a></p>
+<?php endif ?>
+
+<form method="get" id="del" style="display:none" action="<?= route('fatoni.delete.api', ['id'=> $this->widget->form->data->attributes['name'] ]) ?>">
+    <button
+                    type="submit"
+                    class="btn btn-primary" name="send" id="send">
+                    send
+                </button>
+</form>
+
+<form method="post" id="generate" accept-charset="utf-8" action="<?= route('fatoni.generate.api') ?>" style="display:none">
+        <input type='text' name='id' id="id" value="<?= $this->widget->form->data->attributes['id'] ?>">
+        <input type='text' name='name' id="name">
+        <input type='text' name='endpoint' id="endpoint">
+        <input type='text' name='oldname' id="oldname" value="<?= $this->widget->form->data->attributes['name'] ?>">
+        <input type='text' name='oldmodel' id="oldmodel" value="<?= $this->widget->form->data->attributes['model'] ?>">        
+        <input type='text' name='oldendpoint' id="oldendpoint" value="<?= $this->widget->form->data->attributes['endpoint'] ?>">
+        <textarea name='oldcustom_format' id="oldcustom_format"><?= $this->widget->form->data->attributes['custom_format'] ?></textarea>
+        
+        <input type='text' name='model' id="model">
+        <input type='text' name='custom_format' id="custom_format">
+        <button
+                    type="submit"
+                    class="btn btn-primary" name="save" id="save">
+                    send
+                </button>
+    </form>
+<script type="text/javascript">
+     function delData(){       
+        document.getElementById('send').click();
+    }
+    
+</script>
+
+<script type="text/javascript">
+    function saveData(){
+        document.getElementById('name').value = document.getElementById('Form-field-ApiGenerator-name').value;
+        document.getElementById('model').value = document.getElementById('Form-field-ApiGenerator-model').value;
+         document.getElementById('custom_format').value = document.getElementById('Form-field-ApiGenerator-custom_format').value;
+         document.getElementById('endpoint').value = document.getElementById('Form-field-ApiGenerator-endpoint').value;
+        if ( 
+            document.getElementById('name').value != document.getElementById('oldname').value ||
+            document.getElementById('Form-field-ApiGenerator-model').value != document.getElementById('oldmodel').value ||
+            document.getElementById('Form-field-ApiGenerator-custom_format').value != document.getElementById('oldcustom_format').value ||
+            document.getElementById('Form-field-ApiGenerator-endpoint').value != document.getElementById('oldendpoint').value 
+        ){
+            document.getElementById('save').click();
+        }else{
+            document.getElementById('cancel').click();
+        }
+    }
+</script>

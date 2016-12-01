@@ -1,0 +1,10 @@
+name: ApiGeneratorController
+form: $/ahmadfatoni/apigenerator/models/apigenerator/fields.yaml
+modelClass: AhmadFatoni\ApiGenerator\Models\ApiGenerator
+defaultRedirect: ahmadfatoni/apigenerator/apigeneratorcontroller
+create:
+    redirect: 'ahmadfatoni/apigenerator/apigeneratorcontroller/update/:id'
+    redirectClose: ahmadfatoni/apigenerator/apigeneratorcontroller
+update:
+    redirect: ahmadfatoni/apigenerator/apigeneratorcontroller
+    redirectClose: ahmadfatoni/apigenerator/apigeneratorcontroller

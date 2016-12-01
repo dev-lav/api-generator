@@ -1,4 +1,4 @@
 /controllers/*
-!/controllers/apilistcontroller/*
-!/controllers/apilistcontroller
-!/controllers/ApiListController.php
+!/controllers/apigeneratorcontroller/*
+!/controllers/apigeneratorcontroller
+!/controllers/ApiGeneratorController.php
