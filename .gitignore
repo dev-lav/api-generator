@@ -2,3 +2,4 @@
 !/controllers/apigeneratorcontroller/*
 !/controllers/apigeneratorcontroller
 !/controllers/ApiGeneratorController.php
+!routes.php
