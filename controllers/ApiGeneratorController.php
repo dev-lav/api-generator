@@ -13,10 +13,10 @@ class ApiGeneratorController extends Controller
 {
     public $implement = ['Backend\Behaviors\ListController','Backend\Behaviors\FormController','Backend\Behaviors\ReorderController'];
     
-    public $listConfig = 'config_list.yaml';
-    public $formConfig = 'config_form.yaml';
-    public $reorderConfig = 'config_reorder.yaml';
-
+    public $listConfig      = 'config_list.yaml';
+    public $formConfig      = 'config_form.yaml';
+    public $reorderConfig   = 'config_reorder.yaml';
+    protected $path         = "/API/";
     protected $files;
 
     public function __construct(Filesystem $files)
@@ -26,6 +26,10 @@ class ApiGeneratorController extends Controller
         $this->files         = $files;
     }
 
+    /**
+     * delete selected data (multiple delete)
+     * @return [type] [description]
+     */
     public function index_onDelete()
     {
         if (($checkedIds = post('checked')) && is_array($checkedIds) && count($checkedIds)) {
@@ -34,8 +38,9 @@ class ApiGeneratorController extends Controller
                 if ((!$item = ApiGenerator::find($id)))
                     continue;
                 $name = $item->name;
-                $item->delete();
-                $this->deleteApi($name);
+                if($item->delete()){
+                    $this->deleteApi($name);
+                }
             }
 
             Flash::success('Successfully deleted those data.');
@@ -44,6 +49,11 @@ class ApiGeneratorController extends Controller
         return $this->listRefresh();
     }
 
+    /**
+     * generate API
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     public function generateApi(Request $request){
 
     	$data['model'] 			= $request->model;
@@ -54,11 +64,18 @@ class ApiGeneratorController extends Controller
     	$data['endpoint']		= $request->endpoint;
         $data['custom_format']  = $request->custom_format;
 
+        if( strpos($data['controllername'], ".") OR  strpos($data['controllername'], "/") ){
+
+            Flash::success('Failed to create data, invalid API name.');
+            return Redirect::to( url().'/backend/ahmadfatoni/apigenerator/apigeneratorcontroller');
+
+        }
+        
         if( isset($request->id) ){
             $this->deleteApi($request->oldname, 'false');
         }
 
-    	$this->files->put(__DIR__ . '/'.$data['controllername'].'Controller.php', $this->compile($data));
+    	$this->files->put(__DIR__ . $this->path . $data['controllername'].'Controller.php', $this->compile($data));
 
     	$this->files->put(__DIR__ . '/'.'../routes.php', $this->compileRoute($data));
 
@@ -66,15 +83,40 @@ class ApiGeneratorController extends Controller
 
     }
 
+    /**
+     * delete available API
+     * @param  [type] $name     [description]
+     * @param  [type] $redirect [description]
+     * @return [type]           [description]
+     */
     public function deleteApi($name, $redirect = null){
 
-        $data = [];
+        $fileLocation = __DIR__ . $this->path.$name;
+        $fileLocation = str_replace(".", "", $fileLocation);
 
-        $this->files->put(__DIR__ . '/'.'../routes.php', $this->compileRoute($data));
-        unlink(__DIR__ . '/'.$name.'Controller.php');
+        if( ! file_exists($fileLocation.'Controller.php') ){
 
-        if( $redirect != null ){
-            return 'success without redirect';
+            Flash::success('Failed to delete data, invalid file location.');
+            return Redirect::to( url().'/backend/ahmadfatoni/apigenerator/apigeneratorcontroller');
+
+        }
+
+        if( strpos( strtolower($name), 'apigenerator' ) === false){
+            $data = [];
+
+            //generate new route
+            $this->files->put(__DIR__ . '/'.'../routes.php', $this->compileRoute($data));
+            
+            //remove controller
+            if (file_exists( __DIR__ . $this->path.$name.'Controller.php' )) {
+
+                unlink(__DIR__ . $this->path.$name.'Controller.php');
+
+            }
+
+            if( $redirect != null ){
+                return 'success without redirect';
+            }
         }
 
         return Redirect::to( url().'/backend/ahmadfatoni/apigenerator/apigeneratorcontroller');
@@ -85,6 +127,11 @@ class ApiGeneratorController extends Controller
 
     }
 
+    /**
+     * compile controller from template
+     * @param  [type] $data [description]
+     * @return [type]       [description]
+     */
     public function compile($data){
         if( $data['custom_format'] != ''){
 
@@ -98,6 +145,12 @@ class ApiGeneratorController extends Controller
 		return $template;
     }
 
+    /**
+     * replace attribute
+     * @param  [type] $template [description]
+     * @param  [type] $data     [description]
+     * @return [type]           [description]
+     */
     public function replaceAttribute($template, $data){
     	if( isset( $data['model'] ) ){
     		$template = str_replace('{{model}}', $data['model'], $template);
@@ -107,6 +160,12 @@ class ApiGeneratorController extends Controller
         return $template;	
     }
 
+    /**
+     * replace custom attribute
+     * @param  [type] $template [description]
+     * @param  [type] $data     [description]
+     * @return [type]           [description]
+     */
     public function replaceCustomAttribute($template, $data){
 
         $arr            = str_replace('\t', '', $data['custom_format']);
