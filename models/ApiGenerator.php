@@ -14,7 +14,7 @@ class ApiGenerator extends Model
      * Validation
      */
     public $rules = [
-        'name'          => 'required|unique:ahmadfatoni_apigenerator_data,name',
+        'name'          => 'required|unique:ahmadfatoni_apigenerator_data,name|regex:/^[\pL\s\-]+$/u',
         'endpoint'      => 'required|unique:ahmadfatoni_apigenerator_data,endpoint',
         'custom_format' => 'json'
     ];
