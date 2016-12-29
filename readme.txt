@@ -1,7 +1,7 @@
 API Generator is October CMS plugin to build RESTful APIs.
 
-##Features
+# Features
 
-- Auto generate routes
-- Auto Generate Controller (CRUD)
-- Support relationship restful API
+## Auto generate routes
+## Auto Generate Controller (CRUD)
+## Support relationship restful API
