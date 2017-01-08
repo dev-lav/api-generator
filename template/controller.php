@@ -1,4 +1,4 @@
-ß<?php namespace AhmadFatoni\ApiGenerator\Controllers\API;
+<?php namespace AhmadFatoni\ApiGenerator\Controllers\API;
 
 use Cms\Classes\Controller;
 use BackendMenu;
