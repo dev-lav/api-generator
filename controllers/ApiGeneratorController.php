@@ -3,6 +3,7 @@
 use Backend\Classes\Controller;
 use AhmadFatoni\ApiGenerator\Models\ApiGenerator;
 use BackendMenu;
+use Backend;
 
 use Illuminate\Http\Request;
 use Illuminate\Filesystem\Filesystem;
@@ -17,6 +18,7 @@ class ApiGeneratorController extends Controller
     public $formConfig      = 'config_form.yaml';
     public $reorderConfig   = 'config_reorder.yaml';
     protected $path         = "/API/";
+    private $homePage       = 'ahmadfatoni/apigenerator/apigeneratorcontroller';
     protected $files;
 
     public function __construct(Filesystem $files)
@@ -67,8 +69,8 @@ class ApiGeneratorController extends Controller
         if( strpos($data['controllername'], ".") OR  strpos($data['controllername'], "/") ){
 
             Flash::success('Failed to create data, invalid API name.');
-            return Redirect::to( url().'/backend/ahmadfatoni/apigenerator/apigeneratorcontroller');
-
+            return Redirect::to( Backend::url($this->homePage));
+        
         }
         
         if( isset($request->id) ){
@@ -79,7 +81,7 @@ class ApiGeneratorController extends Controller
 
     	$this->files->put(__DIR__ . '/'.'../routes.php', $this->compileRoute($data));
 
-    	return Redirect::to( url().'/backend/ahmadfatoni/apigenerator/apigeneratorcontroller');
+    	return Redirect::to( Backend::url($this->homePage));
 
     }
 
@@ -97,7 +99,7 @@ class ApiGeneratorController extends Controller
         if( ! file_exists($fileLocation.'Controller.php') ){
 
             Flash::success('Failed to delete data, invalid file location.');
-            return Redirect::to( url().'/backend/ahmadfatoni/apigenerator/apigeneratorcontroller');
+            return Redirect::to( Backend::url($this->homePage));
 
         }
 
@@ -119,7 +121,7 @@ class ApiGeneratorController extends Controller
             }
         }
 
-        return Redirect::to( url().'/backend/ahmadfatoni/apigenerator/apigeneratorcontroller');
+        return Redirect::to( Backend::url($this->homePage));
 
     }
 
