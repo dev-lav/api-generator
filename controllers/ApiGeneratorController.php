@@ -17,7 +17,7 @@ class ApiGeneratorController extends Controller
     public $listConfig      = 'config_list.yaml';
     public $formConfig      = 'config_form.yaml';
     public $reorderConfig   = 'config_reorder.yaml';
-    protected $path         = "/API/";
+    protected $path         = "/api/";
     private $homePage       = 'ahmadfatoni/apigenerator/apigeneratorcontroller';
     protected $files;
 
