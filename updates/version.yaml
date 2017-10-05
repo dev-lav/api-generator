@@ -7,3 +7,5 @@
     - builder_table_create_ahmadfatoni_apigenerator_data.php
 1.0.4:
     - 'fixing bug on PHP 7'
+1.0.5:
+    - 'fixing bug on request delete data'

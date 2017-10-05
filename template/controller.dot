@@ -83,6 +83,13 @@ class {{controllername}}Controller extends Controller
         return $this->helpers->apiArrayResponseBuilder(200, 'success', 'Data has been deleted successfully.');
     }
 
+    public function destroy($id){
+
+        $this->{{modelname}}->where('id',$id)->delete();
+
+        return $this->helpers->apiArrayResponseBuilder(200, 'success', 'Data has been deleted successfully.');
+    }
+
 
     public static function getAfterFilters() {return [];}
     public static function getBeforeFilters() {return [];}
