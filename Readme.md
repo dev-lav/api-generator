@@ -5,11 +5,9 @@
 
 ## Features
 
-```
-  1. Auto generate routes
-  2. Auto Generate Controller (CRUD)
-  3. Support relationship restful API
-```
+  - Auto generate routes
+  - Auto Generate Controller (CRUD)
+  - Support relationship restful API
 
 ## Install
 
