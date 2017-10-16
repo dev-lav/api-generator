@@ -23,18 +23,6 @@
 
 ## Contribute
 
-PRs accepted.
+Pull Requests accepted.
 
 ## License
-
-MIT © Richard McRichface
-
-
-
-
-
-# Features
-
-## Auto generate routes
-## Auto Generate Controller (CRUD)
-## Support relationship restful API
