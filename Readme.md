@@ -1,7 +1,7 @@
 
-# API Generator is October CMS plugin to build RESTful APIs.
+# API Generator 
 
-> This is an example file with default selections.
+> October CMS plugin to build RESTful APIs.
 
 ## Features
 
