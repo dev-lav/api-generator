@@ -302,7 +302,7 @@ class ApiGeneratorController extends Controller
 
             $modelname              = explode("\\", $key->model);
             $modelname              = $modelname[count($modelname)-1];
-            $old['modelname']       = $key->name;
+            $old['modelname']       = $key->endpoint;
             $old['controllername']  = $key->name;
 
             if( $data['modelname'] != $modelname ){
