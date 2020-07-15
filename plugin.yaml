@@ -9,3 +9,9 @@ navigation:
         label: 'API Generator'
         url: ahmadfatoni/apigenerator/apigeneratorcontroller
         icon: icon-cogs
+        permissions:
+            - ahmadfatoni.apigenerator.manage
+permissions:
+    ahmadfatoni.apigenerator.manage:
+        tab: 'API Generator'
+        label: 'Manage the API Generator'

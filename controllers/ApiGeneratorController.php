@@ -20,6 +20,7 @@ class ApiGeneratorController extends Controller
     protected $path         = "/api/";
     private $homePage       = 'ahmadfatoni/apigenerator/apigeneratorcontroller';
     protected $files;
+    public $requiredPermissions = ['ahmadfatoni.apigenerator.manage'];
 
     public function __construct(Filesystem $files)
     {
