@@ -1,0 +1,9 @@
+{
+    "name": "fatoni/api-generator-plugin",
+    "type": "october-plugin",
+    "description": "October CMS plugin to build RESTful APIs",
+    "require": {
+        "composer/installers": "~1.0",
+        "rainlab/builder-plugin": "^2.0"
+    }
+}

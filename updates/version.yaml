@@ -13,3 +13,5 @@
     - 'fixing bug on generate endpoint'
 1.0.7:
     - 'fixing bug on October CMS v1.0.456'
+1.0.8:
+    - 'fixing bug on October CMS v3'
