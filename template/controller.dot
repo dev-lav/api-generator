@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use AhmadFatoni\ApiGenerator\Helpers\Helpers;
 use Illuminate\Support\Facades\Validator;
 use {{model}};
+
 class {{controllername}}Controller extends Controller
 {
 	protected ${{modelname}};
@@ -61,7 +62,7 @@ class {{controllername}}Controller extends Controller
 
     public function update($id, Request $request){
 
-        $status = $this->{{modelname}}->where('id',$id)->update($data);
+        $status = $this->{{modelname}}->where('id',$id)->update($request->all());
     
         if( $status ){
             
@@ -88,12 +89,31 @@ class {{controllername}}Controller extends Controller
         return $this->helpers->apiArrayResponseBuilder(200, 'success', 'Data has been deleted successfully.');
     }
 
+    public static function getAfterFilters()
+    {
+        return [];
+    }
 
-    public static function getAfterFilters() {return [];}
-    public static function getBeforeFilters() {return [];}
-    public static function getMiddleware() {return [];}
-    public function callAction($method, $parameters=false) {
-        return call_user_func_array(array($this, $method), $parameters);
+    public static function getBeforeFilters()
+    {
+        return [];
+    }
+
+    public static function getMiddleware()
+    {
+        return [];
+    }
+
+    /**
+     * Execute an action on the controller.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function callAction($method, $parameters)
+    {
+        return $this->{$method}(...array_values($parameters));
     }
     
 }
