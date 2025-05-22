@@ -4,3 +4,5 @@
 !/controllers/ApiGeneratorController.php
 !routes.php
 /controllers/API/*
+/vendor/
+/plugins/
