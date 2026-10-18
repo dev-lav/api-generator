@@ -48,9 +48,6 @@ class ApiLifecycleTest extends ApiTestCase
         $this->getJson('api/v1/articles')->assertStatus(200);
     }
 
-    /**
-     * @group known-issue-v2.1
-     */
     public function testChangingTheModelChangesTheData()
     {
         $this->postArticle('Hello');

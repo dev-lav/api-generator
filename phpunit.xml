@@ -7,7 +7,7 @@
     convertErrorsToExceptions="true"
     convertNoticesToExceptions="true"
     convertWarningsToExceptions="true"
-    processIsolation="true"
+    processIsolation="false"
     stopOnFailure="false"
 >
     <testsuites>
@@ -15,12 +15,6 @@
             <directory>./tests</directory>
         </testsuite>
     </testsuites>
-    <groups>
-        <exclude>
-            <!-- Generated controllers can not be reloaded within one PHP process, fixed by the runtime refactor -->
-            <group>known-issue-v2.1</group>
-        </exclude>
-    </groups>
     <php>
         <env name="APP_ENV" value="testing" />
         <env name="CACHE_DRIVER" value="array" />

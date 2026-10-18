@@ -1,5 +1,0 @@
-
-Route::middleware({{middleware}})->group(function () {
-    Route::resource('{{endpoint}}', 'AhmadFatoni\ApiGenerator\Controllers\API\{{controllername}}Controller', ['except' => ['create', 'edit']]);
-    Route::get('{{endpoint}}/{id}/delete', ['as' => '{{endpoint}}.delete', 'uses' => 'AhmadFatoni\ApiGenerator\Controllers\API\{{controllername}}Controller@destroy']);
-});

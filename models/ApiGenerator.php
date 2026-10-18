@@ -4,13 +4,13 @@ use File;
 use Model;
 use ReflectionClass;
 use ValidationException;
-use AhmadFatoni\ApiGenerator\Classes\ApiBuilder;
+use AhmadFatoni\ApiGenerator\Classes\ApiRegistry;
 use Tailor\Classes\BlueprintIndexer;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
- * ApiGenerator stores an API definition, the controller and routes
- * are (re)generated automatically after save and delete.
+ * ApiGenerator stores an API definition, served at runtime by the
+ * ApiController through the routes registered from ApiRegistry.
  */
 class ApiGenerator extends Model
 {
@@ -64,27 +64,19 @@ class ApiGenerator extends Model
     }
 
     /**
-     * afterSave regenerates the controller and routes
+     * afterSave refreshes the registered routes
      */
     public function afterSave()
     {
-        (new ApiBuilder)->build($this, $this->getOriginal('name'));
+        ApiRegistry::clearCache();
     }
 
     /**
-     * afterDelete removes the controller and regenerates routes
+     * afterDelete refreshes the registered routes
      */
     public function afterDelete()
     {
-        (new ApiBuilder)->remove($this);
-    }
-
-    /**
-     * getControllerName returns the class name prefix for the generated controller
-     */
-    public function getControllerName($name = null): string
-    {
-        return str_replace(' ', '', $name ?? $this->name);
+        ApiRegistry::clearCache();
     }
 
     /**

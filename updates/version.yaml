@@ -20,3 +20,5 @@
 2.1.0:
     - 'Optional authentication with RainLab.User bearer tokens per API'
     - add_require_auth_to_apigenerator_data.php
+2.2.0:
+    - 'Serve APIs at runtime instead of generating controller and route files'

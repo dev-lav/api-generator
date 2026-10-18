@@ -2,11 +2,12 @@
 
 > Generate RESTful CRUD APIs for October CMS models and Tailor blueprints, straight from the backend.
 
-Pick a model, choose a base endpoint and save. The plugin writes the controller and routes for you. You can limit the returned columns, eager load relations and protect an API with a bearer token.
+Pick a model, choose a base endpoint and save. The API is live right away, without generating any code. You can limit the returned columns, eager load relations and protect an API with a bearer token.
 
 ## Features
 
-- CRUD controller and routes generated on save, removed on delete
+- CRUD endpoints available as soon as an API is saved, removed on delete
+- Nothing is written to disk, so APIs survive plugin updates and work on every server
 - Works with plugin models and Tailor blueprints (entries, streams, structures, singles and globals)
 - Custom Condition to choose the returned columns and eager load relations
 - Optional bearer token authentication with [RainLab.User](https://octobercms.com/plugin/rainlab-user)
@@ -53,7 +54,7 @@ Open **API Generator** in the backend menu and click **Create**. You need the `M
 | Custom Condition | Optional JSON to limit columns and load relations, see below. |
 | Require Authentication | Protect every endpoint of this API with a bearer token, see [Authentication](#authentication). |
 
-Saving the form generates `controllers/api/{ApiName}Controller.php` and rebuilds `routes.php`. Both files are overwritten on every save, so do not edit them by hand.
+Saving the form makes the endpoints available immediately. The API definitions are cached and the cache is cleared whenever an API is saved or deleted. If you change the `ahmadfatoni_apigenerator_data` table directly, for example after a database import, run `php artisan cache:clear`.
 
 ### Custom Condition
 
@@ -177,9 +178,20 @@ Tokens expire after 60 minutes. You can change the lifetime and signing key thro
 ## Upgrading from 1.x
 
 - Version 2.x only supports October CMS 4. Keep using 1.x on older versions.
-- Open each API in the backend and save it again to regenerate its controller.
+- From 2.2, APIs are served at runtime. The files in `controllers/api/` and the generated routes from older versions are no longer used and can be deleted.
 - Tailor APIs created with 1.x need the model selected again, because Tailor options are now stored as `tailor:Handle`.
 - The `fatoni/generate/api`, `fatoni/update/api` and `fatoni/delete/api` routes were removed. Generation now happens when you save in the backend.
+
+## Testing
+
+The plugin ships with HTTP integration tests. Run them from the plugin folder inside an October CMS 4 project with RainLab.User installed:
+
+```bash
+cd plugins/ahmadfatoni/apigenerator
+../../../vendor/bin/phpunit
+```
+
+The tests use an in-memory SQLite database and fixture Tailor blueprints, so they do not touch your data.
 
 ## Contribute
 
