@@ -1,0 +1,58 @@
+<?php
+    $baseUrl = url(trim($api->endpoint, '/'));
+    $endpoints = [
+        ['GET', $baseUrl, 'List all records'],
+        ['GET', $baseUrl . '/{id}', 'Show a record'],
+        ['POST', $baseUrl, 'Create a record'],
+        ['PUT', $baseUrl . '/{id}', 'Update a record (PATCH also supported)'],
+        ['DELETE', $baseUrl . '/{id}', 'Delete a record'],
+        ['GET', $baseUrl . '/{id}/delete', 'Delete a record (legacy)'],
+    ];
+    $methodClass = [
+        'GET' => 'success',
+        'POST' => 'primary',
+        'PUT' => 'warning',
+        'DELETE' => 'danger',
+    ];
+?>
+<div class="layout-row">
+    <div class="padded-container">
+        <h4>API Endpoints</h4>
+        <p class="text-muted">Endpoints generated for <code><?= e($api->model) ?></code>. Send the body as JSON or x-www-form-urlencoded.</p>
+        <?php if ($api->require_auth): ?>
+            <p>
+                <span class="badge bg-warning">Auth required</span>
+                Send the header <code>Authorization: Bearer TOKEN</code>.
+                Get a token from <code>POST <?= e(url('api/v1/auth/login')) ?></code>
+                with <code><?= e(\RainLab\User\Helpers\User::username()) ?></code> and <code>password</code>,
+                refresh it with <code>POST <?= e(url('api/v1/auth/refresh')) ?></code>.
+            </p>
+        <?php else: ?>
+            <p><span class="badge bg-secondary">Public</span> No authentication required.</p>
+        <?php endif ?>
+        <table class="table data">
+            <thead>
+                <tr>
+                    <th style="width: 100px">Method</th>
+                    <th>URL</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($endpoints as [$method, $url, $description]): ?>
+                    <tr>
+                        <td><span class="badge bg-<?= $methodClass[$method] ?>"><?= $method ?></span></td>
+                        <td>
+                            <?php if ($method === 'GET' && strpos($url, '{id}') === false): ?>
+                                <a href="<?= e($url) ?>" target="_blank"><code><?= e($url) ?></code></a>
+                            <?php else: ?>
+                                <code><?= e($url) ?></code>
+                            <?php endif ?>
+                        </td>
+                        <td><?= e($description) ?></td>
+                    </tr>
+                <?php endforeach ?>
+            </tbody>
+        </table>
+    </div>
+</div>

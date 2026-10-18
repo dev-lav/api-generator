@@ -1,3 +1,0 @@
-
-Route::resource('{{modelname}}', 'AhmadFatoni\ApiGenerator\Controllers\API\{{controllername}}Controller', ['except' => ['destroy', 'create', 'edit']]);
-Route::get('{{modelname}}/{id}/delete', ['as' => '{{modelname}}.delete', 'uses' => 'AhmadFatoni\ApiGenerator\Controllers\API\{{controllername}}Controller@destroy']);
