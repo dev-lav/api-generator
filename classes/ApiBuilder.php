@@ -61,6 +61,7 @@ class ApiBuilder
             $routes .= $this->parseTemplate('route.dot', [
                 'endpoint' => trim($api->endpoint, '/'),
                 'controllername' => $api->getControllerName(),
+                'middleware' => $this->exportArray($api->getRouteMiddleware()),
             ]);
         }
 

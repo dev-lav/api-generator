@@ -57,6 +57,10 @@ class ApiGenerator extends Model
         if ($this->model && !array_key_exists($this->model, $this->getModelOptions())) {
             throw new ValidationException(['model' => 'Please select a valid model.']);
         }
+
+        if ($this->require_auth && !static::hasUserPlugin()) {
+            throw new ValidationException(['require_auth' => 'Authentication requires the RainLab.User plugin.']);
+        }
     }
 
     /**
@@ -98,6 +102,27 @@ class ApiGenerator extends Model
     {
         return $this->isTailor() ? substr($this->model, strlen(self::TAILOR_PREFIX)) : null;
     }
+
+    /**
+     * getRouteMiddleware returns the middleware applied to the generated routes
+     */
+    public function getRouteMiddleware(): array
+    {
+        if ($this->require_auth) {
+            return [\AhmadFatoni\ApiGenerator\Http\ApiAuthMiddleware::class];
+        }
+
+        return [];
+    }
+
+    /**
+     * hasUserPlugin returns true if RainLab.User is installed and enabled
+     */
+    public static function hasUserPlugin(): bool
+    {
+        return \System\Classes\PluginManager::instance()->exists('RainLab.User');
+    }
+
 
     /**
      * get model List

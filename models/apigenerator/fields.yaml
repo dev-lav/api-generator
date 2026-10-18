@@ -31,3 +31,9 @@ fields:
         oc.commentPosition: ''
         span: full
         type: textarea
+    require_auth:
+        label: 'Require Authentication'
+        comment: 'Protect this API with a RainLab.User bearer token (Authorization: Bearer TOKEN). Get a token from POST api/v1/auth/login.'
+        span: auto
+        type: switch
+        default: false
