@@ -1,25 +1,39 @@
 <?php namespace AhmadFatoni\ApiGenerator\Models;
 
-use Model, Log;
-use RainLab\Builder\Classes\ComponentHelper;
+use File;
+use Model;
+use ReflectionClass;
+use ValidationException;
+use AhmadFatoni\ApiGenerator\Classes\ApiBuilder;
+use Tailor\Classes\BlueprintIndexer;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
- * Model
+ * ApiGenerator stores an API definition, the controller and routes
+ * are (re)generated automatically after save and delete.
  */
 class ApiGenerator extends Model
 {
     use \October\Rain\Database\Traits\Validation;
 
+    /**
+     * Prefix used for Tailor blueprint options, e.g. tailor:Blog\Category
+     */
+    const TAILOR_PREFIX = 'tailor:';
+
     /*
      * Validation
      */
     public $rules = [
-        'name'          => 'required|unique:ahmadfatoni_apigenerator_data,name|regex:/^[\pL\s\-]+$/u',
-        'endpoint'      => 'required|unique:ahmadfatoni_apigenerator_data,endpoint',
+        'name'          => 'required|unique:ahmadfatoni_apigenerator_data,name|regex:/^[A-Za-z][A-Za-z0-9\s]*$/',
+        'endpoint'      => 'required|unique:ahmadfatoni_apigenerator_data,endpoint|regex:/^\/?[A-Za-z0-9\-_\/]+$/',
+        'model'         => 'required',
         'custom_format' => 'json'
     ];
 
     public $customMessages = [
+        'name.regex'         => 'API Name may only contain letters, numbers and spaces, and must start with a letter.',
+        'endpoint.regex'     => 'Base Endpoint may only contain letters, numbers, dashes, underscores and slashes.',
         'custom_format.json' => 'Invalid Json Format Custom Condition'
     ];
 
@@ -35,12 +49,133 @@ class ApiGenerator extends Model
     public $table = 'ahmadfatoni_apigenerator_data';
 
     /**
-     * get model List
-     * @return [type] [description]
+     * beforeValidate only allows models listed in the dropdown, since the
+     * value is written into generated PHP code
      */
-    public function getModelOptions(){
-        
-        return ComponentHelper::instance()->listGlobalModels();
+    public function beforeValidate()
+    {
+        if ($this->model && !array_key_exists($this->model, $this->getModelOptions())) {
+            throw new ValidationException(['model' => 'Please select a valid model.']);
+        }
+    }
+
+    /**
+     * afterSave regenerates the controller and routes
+     */
+    public function afterSave()
+    {
+        (new ApiBuilder)->build($this, $this->getOriginal('name'));
+    }
+
+    /**
+     * afterDelete removes the controller and regenerates routes
+     */
+    public function afterDelete()
+    {
+        (new ApiBuilder)->remove($this);
+    }
+
+    /**
+     * getControllerName returns the class name prefix for the generated controller
+     */
+    public function getControllerName($name = null): string
+    {
+        return str_replace(' ', '', $name ?? $this->name);
+    }
+
+    /**
+     * isTailor returns true if the model is a Tailor blueprint
+     */
+    public function isTailor(): bool
+    {
+        return strpos((string) $this->model, self::TAILOR_PREFIX) === 0;
+    }
+
+    /**
+     * getBlueprintHandle returns the Tailor blueprint handle
+     */
+    public function getBlueprintHandle(): ?string
+    {
+        return $this->isTailor() ? substr($this->model, strlen(self::TAILOR_PREFIX)) : null;
+    }
+
+    /**
+     * get model List
+     * @return array
+     */
+    public function getModelOptions()
+    {
+        return $this->getPluginModels() + $this->getTailorBlueprints();
+    }
+
+    /**
+     * getPluginModels scans plugin model directories for Eloquent models
+     * @return array
+     */
+    protected function getPluginModels()
+    {
+        $models = [];
+
+        foreach (File::directories(plugins_path()) as $vendorPath) {
+            $vendor = basename($vendorPath);
+
+            foreach (File::directories($vendorPath) as $pluginPath) {
+                $plugin = basename($pluginPath);
+                $modelsPath = $pluginPath . '/models';
+
+                if (!File::isDirectory($modelsPath)) {
+                    continue;
+                }
+
+                foreach (File::files($modelsPath) as $file) {
+                    if ($file->getExtension() !== 'php') {
+                        continue;
+                    }
+
+                    $class = $vendor . '\\' . $plugin . '\\Models\\' . $file->getFilenameWithoutExtension();
+
+                    if (!class_exists($class) || !is_subclass_of($class, EloquentModel::class)) {
+                        continue;
+                    }
+
+                    // Normalize casing from the real class name
+                    $reflection = new ReflectionClass($class);
+                    $class = $reflection->getName();
+
+                    if ($class === static::class || $reflection->isAbstract()) {
+                        continue;
+                    }
+
+                    $models[$class] = $class;
+                }
+            }
+        }
+
+        ksort($models);
+
+        return $models;
+    }
+
+    /**
+     * getTailorBlueprints returns Tailor sections and globals
+     * @return array
+     */
+    protected function getTailorBlueprints()
+    {
+        $blueprints = [];
+        $indexer = BlueprintIndexer::instance();
+
+        foreach ($indexer->listSections() as $blueprint) {
+            $blueprints[self::TAILOR_PREFIX . $blueprint->handle] = "Tailor: {$blueprint->handle} ({$blueprint->type})";
+        }
+
+        foreach ($indexer->listGlobals() as $blueprint) {
+            $blueprints[self::TAILOR_PREFIX . $blueprint->handle] = "Tailor: {$blueprint->handle} (global)";
+        }
+
+        ksort($blueprints);
+
+        return $blueprints;
     }
 
     /**
@@ -68,9 +203,9 @@ class ApiGenerator extends Model
                 }
             }
         }
-        
+
         return $this->attributes['custom_format'] = $value;
-        
+
     }
-    
+
 }

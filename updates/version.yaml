@@ -15,3 +15,5 @@
     - 'fixing bug on October CMS v1.0.456'
 1.0.8:
     - 'fixing bug on October CMS v3'
+1.0.9:
+    - 'Compatibility with October CMS v4, Tailor blueprint support and generate API on save'
