@@ -1,0 +1,9 @@
+uuid: 9c8b7a6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d
+handle: ApiTest\Settings
+type: global
+name: Settings
+
+fields:
+    site_name:
+        label: Site Name
+        type: text

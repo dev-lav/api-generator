@@ -4,3 +4,4 @@
 !/controllers/ApiGeneratorController.php
 !routes.php
 /controllers/API/*
+.phpunit.result.cache

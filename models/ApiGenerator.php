@@ -28,7 +28,7 @@ class ApiGenerator extends Model
         'name'          => 'required|unique:ahmadfatoni_apigenerator_data,name|regex:/^[A-Za-z][A-Za-z0-9\s]*$/',
         'endpoint'      => 'required|unique:ahmadfatoni_apigenerator_data,endpoint|regex:/^\/?[A-Za-z0-9\-_\/]+$/',
         'model'         => 'required',
-        'custom_format' => 'json'
+        'custom_format' => 'nullable|json'
     ];
 
     public $customMessages = [

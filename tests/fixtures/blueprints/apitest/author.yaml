@@ -1,0 +1,10 @@
+uuid: 7a1e1d3e-0c7b-4b8e-9d65-1f2d3c4b5a61
+handle: ApiTest\Author
+type: entry
+name: Author
+drafts: false
+
+fields:
+    bio:
+        label: Bio
+        type: textarea

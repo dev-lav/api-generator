@@ -1,0 +1,16 @@
+uuid: 2f6b9c1a-8d4e-4f7a-a3b2-6c5d4e3f2a10
+handle: ApiTest\Article
+type: stream
+name: Article
+drafts: false
+
+fields:
+    summary:
+        label: Summary
+        type: textarea
+
+    author:
+        label: Author
+        type: entries
+        source: ApiTest\Author
+        maxItems: 1
